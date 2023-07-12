@@ -55,37 +55,3 @@ module "vpc" {
   }
 }
   
-resource "aws_security_group" "blog" {
-  name 	=	"blog-sg"
-  description	=	"Allow 80/443 IN, Allow ALL OUT"
-  
-  vpc_id 		=	module.vpc.public_subnets[0]
-}
-  
-resource "aws_security_group_rule" "blog_http_in" {
-	type 		= "ingress"
-	from_port 		= 80
-	to_port 		= 80
-	protocol		= "tcp"
-	cidr_blocks 		= ["0.0.0.0/0"]
-	security_group_id		= aws_security_group.blog.id
-}
-  
-resource "aws_security_group_rule" "blog_https_in" {
-	type 		= "ingress"
-	from_port 		= 443
-	to_port 		= 443
-	protocol		= "tcp"
-	cidr_blocks 		= ["0.0.0.0/0"]
-	security_group_id		= aws_security_group.blog.id
-}
-  
-resource "aws_security_group_rule" "blog_all_out" {
-	type 		= "egress"
-	from_port 		= 0
-	to_port 		= 0
-	protocol		= -1
-	cidr_blocks 		= ["0.0.0.0/0"]
-	security_group_id		= aws_security_group.blog.id
-}
-  
