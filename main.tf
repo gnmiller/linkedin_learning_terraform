@@ -38,6 +38,10 @@ module "autoscaling" {
   target_group_arns   = module.blog_alb.target_group_arns
   security_groups     =	[module.blog_sg.security_group_id]
 
+  placement = {
+    availability_zone = ["us-east-2a","us-east-2b","us-east-2c"]
+  }
+
   image_id            = data.aws_ami.app_ami.id
   instance_type       = var.instance_type
 }
