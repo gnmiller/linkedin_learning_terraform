@@ -37,15 +37,29 @@ resource "aws_instance" "blog" {
   }
 }
   
-data "aws_vpc" "default" {
-	default = true
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "dev_vpc"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["us-east-2a", "us-east-2b", "us-east-2c"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+  enable_nat_gateway = true
+  enable_vpn_gateway = true
+
+  tags = {
+    Terraform = "true"
+    Environment = "dev"
+  }
 }
   
 resource "aws_security_group" "blog" {
-  name 	= "blog-sg"
-  description	= "Allow 80/443 IN, Allow ALL OUT"
+  name 	=	"blog-sg"
+  description	=	"Allow 80/443 IN, Allow ALL OUT"
   
-  vpc_id 		= data.aws_vpc.default.id
+  vpc_id 		=	module.vpc.public_subnets[0]
 }
   
 resource "aws_security_group_rule" "blog_http_in" {
