@@ -28,7 +28,7 @@ module "blog_sg" {
 }
 
 resource "aws_instance" "blog" {
-  ami				=	module.vpc.public_subnets[0]
+  ami				=	data.aws_ami.app_ami.id
   instance_type				=	var.instance_type
   vpc_security_group_ids				=	[module.blog_sg.security_group_id]
   subnet_id				=	module.vpc.public_subnets[0]
